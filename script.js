@@ -1,52 +1,30 @@
 // script.js
+const API_KEY = '7JPsmDFlhQbw3e6IbP';
+const API_SECRET = '4U9GzMI36XbJ9BATqGjc7d1nqzGTXcy1DgQU';
 
-// Replace with your actual endpoint
-const API_URL = 'https://api.example.com/data';
+const BASE_URL = 'https://api-testnet.bybit.com';
 
-async function fetchData() {
-  const resp = await fetch(API_URL, {
-    headers: {
-      'Authorization': `Bearer ${YOUR_API_KEY}:${YOUR_API_SECRET}`
-    }
-  });
-  if (!resp.ok) throw new Error('Network response was not ok');
-  return resp.json();
-}
+async function fetchTrades() {
+  const response = await fetch('/proxy-api/fill?symbol=BTCUSDT'); // Replace with actual proxy route
+  const data = await response.json();
 
-function createChart(ctx, type, labels, data, label) {
-  return new Chart(ctx, {
-    type: type,
-    data: {
-      labels: labels,
-      datasets: [{
-        label: label,
-        data: data,
-        fill: false,
-        tension: 0.1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
+  const tbody = document.querySelector("#tradesTable tbody");
+  tbody.innerHTML = ""; // clear previous data
+
+  data.result.list.forEach(trade => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${new Date(trade.created_time * 1000).toLocaleString()}</td>
+      <td>${trade.symbol}</td>
+      <td>${trade.side}</td>
+      <td>${trade.qty}</td>
+      <td>${trade.leverage || '—'}</td>
+      <td>${trade.unrealised_pnl || 0}</td>
+      <td>${trade.realised_pnl || 0}</td>
+    `;
+    tbody.appendChild(row);
   });
 }
 
-async function initDashboard() {
-  try {
-    const json = await fetchData();
-    // Assume json = { timestamps: [...], valuesA: [...], valuesB: [...] }
-
-    // Line Chart
-    const lineCtx = document.getElementById('lineChart').getContext('2d');
-    createChart(lineCtx, 'line', json.timestamps, json.valuesA, 'Metric A');
-
-    // Bar Chart
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    createChart(barCtx, 'bar', json.timestamps, json.valuesB, 'Metric B');
-  } catch (err) {
-    console.error('Error loading data:', err);
-  }
-}
-
-window.onload = initDashboard;
+setInterval(fetchTrades, 5000); // refresh every 5 seconds
+fetchTrades();
