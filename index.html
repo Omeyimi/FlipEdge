@@ -1,25 +1,29 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bybit Demo Trading Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Dashboard</h1>
-  </header>
-  <main>
-    <section class="card">
-      <canvas id="lineChart"></canvas>
-    </section>
-    <section class="card">
-      <canvas id="barChart"></canvas>
-    </section>
-  </main>
+  <div class="dashboard">
+    <h1>Bybit Demo Trading Dashboard</h1>
+    <table id="tradesTable">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Instrument</th>
+          <th>Direction</th>
+          <th>Size</th>
+          <th>Leverage</th>
+          <th>Unrealized P&L</th>
+          <th>Realized P&L</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
